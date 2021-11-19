@@ -6,7 +6,8 @@ const uglify = require( "gulp-uglify" );
 const rename = require( "gulp-rename" );
 
 // eslint-disable-next-line no-undef
-const moduleName = /^.+\/(.+)$/.exec( process.env.PWD )[ 1 ];
+//const moduleName = /^.+\/(.+)$/.exec( process.env.PWD )[ 1 ];
+const moduleName = "module";
 gulp.task( "compress" , done => {
 
   gulp.src( `./${moduleName}/*.js` )
