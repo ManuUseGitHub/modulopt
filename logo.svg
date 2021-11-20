@@ -8,9 +8,9 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="21.069803mm"
-   height="11.060035mm"
-   viewBox="0 0 21.069803 11.060035"
+   width="50.404171mm"
+   height="26.458334mm"
+   viewBox="0 0 50.40417 26.458335"
    version="1.1"
    id="svg8"
    inkscape:version="1.0.2 (e86c8708, 2021-01-15)"
@@ -32,16 +32,6 @@
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient922"
-       id="linearGradient924"
-       x1="-35.651131"
-       y1="34.955379"
-       x2="-34.109451"
-       y2="35.018864"
-       gradientUnits="userSpaceOnUse"
-       gradientTransform="translate(-4.1263323,-7.7448083)" />
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient922"
        id="linearGradient993"
        gradientUnits="userSpaceOnUse"
        gradientTransform="translate(-4.1263323,-7.7448083)"
@@ -58,26 +48,29 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="4.1678458"
-     inkscape:cx="64.75062"
-     inkscape:cy="71.062652"
+     inkscape:cx="65.230484"
+     inkscape:cy="64.239345"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      inkscape:document-rotation="0"
      showgrid="false"
      inkscape:snap-object-midpoints="true"
-     inkscape:snap-global="false"
+     inkscape:snap-global="true"
      inkscape:snap-midpoints="true"
      inkscape:snap-smooth-nodes="true"
      inkscape:object-paths="true"
      inkscape:window-width="1366"
-     inkscape:window-height="1024"
+     inkscape:window-height="996"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="0"
      fit-margin-top="0"
      fit-margin-left="0"
      fit-margin-right="0"
-     fit-margin-bottom="0" />
+     fit-margin-bottom="0"
+     inkscape:snap-page="true"
+     inkscape:snap-bbox="true"
+     inkscape:bbox-nodes="true" />
   <metadata
      id="metadata5">
     <rdf:RDF>
@@ -94,9 +87,10 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(47.982159,-19.396904)">
+     transform="translate(47.982159,-3.9986057)">
     <g
-       id="g973">
+       id="g973"
+       transform="matrix(2.3922468,0,0,2.3922468,66.803008,-42.403577)">
       <g
          aria-label="O "
          id="text18"
@@ -108,7 +102,7 @@
            id="path932" />
       </g>
       <path
-         style="fill:none;stroke:url(#linearGradient993);stroke-width:0.873125;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         style="fill:none;stroke:url(#linearGradient993);stroke-width:0.87319;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          d="m -37.81534,24.464247 -3.207833,5.55613"
          id="path68"
          sodipodi:nodetypes="cc" />
@@ -143,7 +137,7 @@
            id="path926" />
       </g>
       <path
-         style="fill:#ff8080;fill-opacity:1;stroke:#ff8080;stroke-width:0.873125;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         style="fill:#ff8080;fill-opacity:1;stroke:#ff8080;stroke-width:0.873079;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          d="m -35.141758,19.833467 -0.965839,1.672883"
          id="path909"
          sodipodi:nodetypes="cc" />
@@ -151,17 +145,17 @@
     <text
        xml:space="preserve"
        style="font-size:1.05833px;line-height:1.25;font-family:Sathu;-inkscape-font-specification:Sathu;stroke-width:0.264583"
-       x="-47.939987"
-       y="32.304165"
+       x="-48.022865"
+       y="32.878475"
        id="text1015"><tspan
          sodipodi:role="line"
          id="tspan1013"
-         x="-47.939987"
-         y="32.304165"
-         style="stroke-width:0.264583">stroke size : 3,300</tspan><tspan
+         x="-48.022865"
+         y="32.878475"
+         style="stroke-width:0.264583">stroke size : 7,894</tspan><tspan
          sodipodi:role="line"
-         x="-47.939987"
-         y="33.627079"
+         x="-48.022865"
+         y="34.201389"
          style="stroke-width:0.264583"
          id="tspan1017">name : modulopt</tspan></text>
   </g>
