@@ -3,7 +3,7 @@ Engrafts options support (default values + validity) to your objects or modules.
 
 ---
 ## Demo
-[Runkit demo](https://runkit.com/manuusegithub/runkit-npm-modulopt)
+[Runkit demo](https://runkit.com/manuusegithub/modulopt)
 
 ---
 ## Getting started
