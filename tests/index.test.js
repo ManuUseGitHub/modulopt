@@ -37,7 +37,7 @@ describe( "options" , () => {
     test( "options can be set via mask and object in the same call" , () => {
         console.log( "example of generated configuration for options" );
         const obj = getInstanceConfigured( true );
-        
+
         const mask = "02";
 
         const updated = stick( obj , { sort : "asc" } , mask );
@@ -51,6 +51,35 @@ describe( "options" , () => {
         let updated = stick( obj , { bar : "hello" } );
 
         expect( updated.options.bar ).not.toBe( "hello" );
+    } );
+
+    test( "string options can only have string value" , () => {
+        const instance = new Testing();
+
+        const myDesired = [ [ "bar" , "hello world" ] ];
+
+        optionize( instance , myDesired );
+
+        let updated = stick( instance , { bar : 10 } );
+
+        expect( updated.options.bar ).toBe( "hello world" );
+    } );
+
+    test( "free options can be anything" , () => {
+        const instance = new Testing();
+
+        const myDesired = [
+            [ "foo" ] ,
+            [ "bar" , null ]
+        ];
+
+        optionize( instance , myDesired );
+        [ 10 , "hello modulopt" , () => { } , true , false , { hello : "world" } ].forEach( x => {
+
+            let updated = stick( instance , { foo : x , bar : x } );
+            expect( updated.options.bar ).toBe( x );
+
+        } );
     } );
 
     test( "free options of type obj can have any maching type value except undefined" , () => {

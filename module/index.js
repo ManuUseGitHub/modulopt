@@ -4,25 +4,23 @@ exports.populateOptionsObjects = exports.stick = exports.optionize = void 0;
 var prepare_1 = require("./prepare");
 exports.populateOptionsObjects = prepare_1.populateOptionsObjects;
 var apply_1 = require("./apply");
-var optionize = function (object, optionVector, hint, applied) {
+var optionize = function (object, optionVector, hint) {
     if (hint === void 0) { hint = false; }
-    if (applied === void 0) { applied = {}; }
     var definitions = {};
     var _a = (0, prepare_1.beforeOptionize)(object, optionVector), sortedVector = _a.sortedVector, totalOffset = _a.totalOffset;
     var buildDef = { cpt: 0, optionVector: sortedVector, definitions: definitions };
     (0, prepare_1.buildDefinition)(totalOffset, object.modulopt, buildDef);
-    // attach the
     (0, prepare_1.populateOptionsObjects)(object.modulopt, definitions);
-    var configured = stick(object, applied);
     hintDefinitions(object, hint);
-    return configured;
+    object.options = Object.assign({}, object.modulopt.defaults);
+    return object;
 };
 exports.optionize = optionize;
 var hintDefinitions = function (object, hint) {
     if (hint) {
         var stringify = require("json-stringify-pretty-compact");
         var colorizeJson = require("json-colorizer");
-        console.log("option configuration for the instance of \"" + object.constructor.name + "\" (class) :\n", colorizeJson(stringify(object.modulopt)));
+        console.log("modulopt configuration for the instance of \"" + object.constructor.name + "\" (class) :\n", colorizeJson(stringify(object.modulopt)));
     }
     return object;
 };

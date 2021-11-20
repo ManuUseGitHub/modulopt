@@ -8,6 +8,12 @@ test( "the bar option is set to false from mask" , () => {
     expect( chosenFromMask( obj.modulopt , mask , "bar" ) ).toBe( false );
 } );
 
+test( "excessive amount of dots in masks does not affect the result" , () => {
+    const obj = getInstanceConfigured();
+    const mask = "2.2..2.2.21...22......";
+    expect( chosenFromMask( obj.modulopt , mask , "foo" ) ).toBe( false );
+} );
+
 test( "an effective mask can be get from a setMask" , () => {
     const result = guessMaskFromMask( "02.0120.02" );
     expect( result ).toBe( "-1-01--1" );
@@ -57,4 +63,10 @@ test( "can have all options set to true from one mask without dots" , () => {
     Object.keys( options ).forEach( key => {
         expect( options[ key ] ).toBe( true );
     } );
+} );
+
+test( "setting a multioption by putting all covering bits keeps the first match " , () => {
+    const obj = getInstanceConfigured();
+    const mask = "22.2000";
+    expect( chosenFromMask( obj.modulopt , mask , "level" ) ).toBe( "normal" );
 } );

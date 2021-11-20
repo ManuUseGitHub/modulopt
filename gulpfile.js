@@ -13,7 +13,7 @@ gulp.task( "compress" , done => {
   gulp.src( `./${moduleName}/*.js` )
     .pipe( uglify() )
     .pipe( rename( function ( path ) {
-      path.extname = `.min${path.extname}`;
+      path.extname = `${path.extname}`;
     } ) )
     .pipe( gulp.dest( `./${moduleName}/dist` ) );
 
