@@ -124,7 +124,7 @@ const defineInterval = ( row: any , cpt: number ): number[] => {
 		: [ cpt ];
 };
 
-const populateOptionsObjects = <T extends IUseOption>(
+const populateOptionsObjects = (
 	modulopt: IOptionsConfig ,
 	definitions: IRowsOption
 ) => {
