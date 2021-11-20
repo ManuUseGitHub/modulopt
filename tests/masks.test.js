@@ -1,6 +1,8 @@
 /* eslint-disable no-undef */
 const { chosenFromMask , guessMaskFromMask , getOptionsFromMask } = require( "../module/apply" );
 const { getInstanceConfigured , removeFromOptions } = require( "./utile" );
+const { optionize } = require( "../module" );
+const { formatedNumberRepresentation } = require( "../module/prepare" );
 
 test( "the bar option is set to false from mask" , () => {
     const obj = getInstanceConfigured();
@@ -69,4 +71,37 @@ test( "setting a multioption by putting all covering bits keeps the first match 
     const obj = getInstanceConfigured();
     const mask = "22.2000";
     expect( chosenFromMask( obj.modulopt , mask , "level" ) ).toBe( "normal" );
+} );
+
+test( "setting a multioption accepting something else than string" , () => {
+
+    // TODO:  Write about the case of chimerical multioption
+    const definitions = [
+
+        // kimera case
+        [ "bools" , true , [ true , "maybe" , "no" , false ] ] ,
+
+        // numbers
+        [ "someval" , 0 , [ 5 , 3.14 , 8.1 , Number.NaN ] ] ,
+
+        // strings
+        [ "greetings" , "hello worlds" , [ "hi" , "yo" , "hey" , "booh !" ] ] ,
+
+        // miscs
+        [ "blastval" , null , [ 5 , "pi" , void 0 , ()=>{} ] ] ,
+    ];
+    
+    let cpt = 0;
+    const y = definitions.length;
+    const x = definitions[ 0 ][ 2 ].length;
+    const test = optionize( {} , definitions );
+
+    for ( let i = 0; i < y; ++i ) {
+        for ( let j = 0; j < x; ++j ) {
+            const bit = Math.pow( 2 , cpt++ );
+            const representation = formatedNumberRepresentation( bit , 12 );
+            const option = definitions[ i ][ 0 ];
+            expect( chosenFromMask( test.modulopt , representation , option ) ).toBe( definitions[ i ][ 2 ][ j ] );
+        }
+    }
 } );

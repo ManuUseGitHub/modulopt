@@ -70,7 +70,7 @@ const masksMappedByName = (
 	const mapped: IOptions = {};
 
 	for ( const [ key , value ] of Object.entries( masks ) ) {
-		if ( typeof value === "string" ) {
+		if ( typeof value === "string" || previousKey ) {
 			mapped[ value ] = key;
 			const result: number = cb( key , previousKey , value );
 			if ( result != 0 ) {

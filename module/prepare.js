@@ -44,7 +44,7 @@ var pad = function (num, size) {
 var computeOffset = function (optionVector) {
     var offset = 0;
     optionVector
-        .filter(function (row) { return typeof row[1] === "boolean" || row[2]; })
+        .filter(function (row) { return ((typeof row[1] === "boolean") && row.length === 2) || row[2]; })
         .map(function (row) {
         // sum an offset stored in a cell of an array (may not exist so fallback of 1)
         offset += row[2] ? row[2].length : 1;
@@ -89,7 +89,7 @@ var formatedNumberRepresentation = function (value, totalOffset) {
 };
 exports.formatedNumberRepresentation = formatedNumberRepresentation;
 var defineInterval = function (row, cpt) {
-    return typeof row[1] === "boolean"
+    return typeof row[1] === "boolean" && row.length === 2
         ? [cpt]
         : row[2]
             ? [cpt, -1 + cpt + row[2].length]
@@ -205,6 +205,10 @@ var assignValuePerBit = function (modulopt, row, cpt, totalOffset) {
             var bit = Math.pow(2, cpt + i);
             // get the representation with dots every 4th digit
             var representation = formatedNumberRepresentation(bit, totalOffset);
+            // undefined and function references cannot be added so we just tell what we were supposed to have
+            if (typeof row[2][i] === "function" || row[2][i] === void 0) {
+                row[2][i] = (typeof row[2][i]).toUpperCase();
+            }
             // assign the matching bit to the option coded on multiple bits
             modulopt.masks[option][representation] = row[2][i];
         }

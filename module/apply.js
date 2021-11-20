@@ -58,7 +58,7 @@ var masksMappedByName = function (masks, cb, previousKey) {
     var mapped = {};
     for (var _i = 0, _a = Object.entries(masks); _i < _a.length; _i++) {
         var _b = _a[_i], key = _b[0], value = _b[1];
-        if (typeof value === "string") {
+        if (typeof value === "string" || previousKey) {
             mapped[value] = key;
             var result = cb(key, previousKey, value);
             if (result != 0) {

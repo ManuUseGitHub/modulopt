@@ -55,7 +55,7 @@ const pad = ( num: string , size: number ): string => {
 const computeOffset = ( optionVector: any[] ) => {
 	let offset = 0;
 	optionVector
-		.filter( ( row ) => typeof row[ 1 ] === "boolean" || row[ 2 ] )
+		.filter( ( row ) => ( ( typeof row[ 1 ] === "boolean" ) && row.length === 2 ) || row[ 2 ] )
 		.map( ( row ) => {
 
 			// sum an offset stored in a cell of an array (may not exist so fallback of 1)
@@ -117,7 +117,7 @@ const formatedNumberRepresentation = ( value: number , totalOffset: number ) => 
 };
 
 const defineInterval = ( row: any , cpt: number ): number[] => {
-	return typeof row[ 1 ] === "boolean"
+	return typeof row[ 1 ] === "boolean" && row.length === 2
 		? [ cpt ]
 		: row[ 2 ]
 		? [ cpt , -1 + cpt + row[ 2 ].length ]
@@ -284,8 +284,13 @@ const assignValuePerBit = (
 			// get the representation with dots every 4th digit
 			const representation = formatedNumberRepresentation( bit , totalOffset );
 
+			// undefined and function references cannot be added so we just tell what we were supposed to have
+			if ( typeof row[ 2 ][ i ] === "function" || row[ 2 ][ i ] === void 0 ) {
+				row[ 2 ][ i ] = ( typeof row[ 2 ][ i ] ).toUpperCase();
+			}
+
 			// assign the matching bit to the option coded on multiple bits
-			modulopt.masks[ option ][ representation ] = row[ 2 ][ i ];
+			modulopt.masks[ option ][ representation ] = row[ 2 ][ i ] ;
 		}
 	}
 };

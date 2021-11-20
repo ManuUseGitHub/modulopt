@@ -35,6 +35,8 @@ describe( "options" , () => {
     } );
 
     test( "options can be set via mask and object in the same call" , () => {
+
+        // TODO: Speak about setting via one object and a mask
         console.log( "example of generated configuration for options" );
         const obj = getInstanceConfigured( true );
 
