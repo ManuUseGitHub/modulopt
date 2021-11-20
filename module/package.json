@@ -1,6 +1,6 @@
 {
   "name": "modulopt",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Engrafts options support (default values + validity) to objects.",
   "main": "index.js",
   "scripts": {
