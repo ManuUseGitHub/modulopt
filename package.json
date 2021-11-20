@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "test": "jest --coverage && coveralls < coverage/lcov.info",
+    "testCov": "jest --coverage && coveralls < coverage/lcov.info",
+    "test": "jest",
     "watchTest": "jest --watchAll",
     "watchIndex": "nodemon ./dev/index.ts --ignore ./**/*.js",
     "execute": "node demo/",
