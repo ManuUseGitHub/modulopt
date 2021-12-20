@@ -7,6 +7,19 @@ The downside of designing a powerfull option management is quite time consuming.
 
 The phylosophy of this module is to ease the pain of designing an option management. In response to "how can I design that?" it answers by saying: **"You don't have to, I got you covered"**.
 
+# Table of Contents
+1. [Purpose](#purpose)
+2. [Features](#features)
+3. [Noticeable changes](#noticeable-changes)
+4. [Demo](#demo)
+5. [Getting started](#getting-started)
+6. [Behaviors](#behaviors)
+7. [Mismatches](#mismatches)
+8. [[ ADVANCED ] Modulopt generated configuration](#advanced-modulopt-generated-configuration)
+9. [Masks](#masks)
+10. [Check on masks registration](check-on-masks-registration)
+11. [Modulopt property](#modulopt-property)
+
 ## Features
 - adds an `options` property with your ready to use options.
 - handle mismatching options (defaults etc.).
@@ -490,11 +503,21 @@ This will output :
     }
 }
 ```
-## OptionsOffset
+
+## Modulopt property
+This property attached to your object contains everything that modulopt needs to work.
+
+### OptionsOffset
 This property is used to store the maximum offset used by masks and pad every masks with the good amount of zeros `0`. so masks can be represented properly with a dot every 4th digit.
 
-## Free
+### Masks
+This can display which option has which mask. If possible.
+
+### Logs
+This will contain the logging about modulopt. So you can be aware of mismatching options for example.
+
+### Free
 Stores every free or half-free option and the type of its default value. Therefore you can see what kind of value you are supposed to use with a specific (half-)free option.
 
-## defaults
+### defaults
 Stores all defaults values. A copy of this property is used to initialize the options property of your `mySoft` class.
