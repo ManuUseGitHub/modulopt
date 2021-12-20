@@ -1,23 +1,23 @@
 /* eslint-disable no-undef */
-const { chosenFromMask , guessMaskFromMask , getOptionsFromMask } = require( "../module/apply" );
 const { getInstanceConfigured , removeFromOptions } = require( "./utile" );
-const { optionize } = require( "../module" );
-const { formatedNumberRepresentation } = require( "../module/prepare" );
+
+const { MaskBuilder } = require( "../module/MaskBuilder" );
+const maskBuilder = new MaskBuilder();
 
 test( "the bar option is set to false from mask" , () => {
     const obj = getInstanceConfigured();
     const mask = "2222.2221";
-    expect( chosenFromMask( obj.modulopt , mask , "bar" ) ).toBe( false );
+    expect( maskBuilder.chosenFromMask( obj.modulopt , mask , "bar" ) ).toBe( false );
 } );
 
 test( "excessive amount of dots in masks does not affect the result" , () => {
     const obj = getInstanceConfigured();
     const mask = "2.2..2.2.21...22......";
-    expect( chosenFromMask( obj.modulopt , mask , "foo" ) ).toBe( false );
+    expect( maskBuilder.chosenFromMask( obj.modulopt , mask , "foo" ) ).toBe( false );
 } );
 
 test( "an effective mask can be get from a setMask" , () => {
-    const result = guessMaskFromMask( "02.0120.02" );
+    const result = maskBuilder.guessMaskFromMask( "02.0120.02" );
     expect( result ).toBe( "-1-01--1" );
 } );
 
@@ -25,7 +25,7 @@ test( "can have all options set to true from one mask except sort option" , () =
     const obj = getInstanceConfigured();
     const mask = "2222.2222";
 
-    const options = getOptionsFromMask( obj.modulopt , mask );
+    const options = maskBuilder.getOptionsFromMask( obj.modulopt , mask );
     removeFromOptions( obj , options );
 
     Object.keys( options ).forEach( key => {
@@ -37,7 +37,7 @@ test( "can set bar option with shortMask" , () => {
     const obj = getInstanceConfigured();
     const mask = "02";
 
-    const options = getOptionsFromMask( obj.modulopt , mask );
+    const options = maskBuilder.getOptionsFromMask( obj.modulopt , mask );
     removeFromOptions( obj , options );
 
     expect( options[ "bar" ] ).toBe( true );
@@ -47,7 +47,7 @@ test( "can have all options set to false from one mask except sort option" , () 
     const obj = getInstanceConfigured();
     const mask = "0011.1111.1111";
 
-    const options = getOptionsFromMask( obj.modulopt , mask );
+    const options = maskBuilder.getOptionsFromMask( obj.modulopt , mask );
     removeFromOptions( obj , options );
 
     Object.keys( options ).forEach( key => {
@@ -59,7 +59,7 @@ test( "can have all options set to true from one mask without dots" , () => {
     const obj = getInstanceConfigured();
     const mask = "22222222";
 
-    const options = getOptionsFromMask( obj.modulopt , mask );
+    const options = maskBuilder.getOptionsFromMask( obj.modulopt , mask );
     removeFromOptions( obj , options );
 
     Object.keys( options ).forEach( key => {
@@ -70,38 +70,5 @@ test( "can have all options set to true from one mask without dots" , () => {
 test( "setting a multioption by putting all covering bits keeps the first match " , () => {
     const obj = getInstanceConfigured();
     const mask = "22.2000";
-    expect( chosenFromMask( obj.modulopt , mask , "level" ) ).toBe( "normal" );
-} );
-
-test( "setting a multioption accepting something else than string" , () => {
-
-    // TODO:  Write about the case of chimerical multioption
-    const definitions = [
-
-        // kimera case
-        [ "bools" , true , [ true , "maybe" , "no" , false ] ] ,
-
-        // numbers
-        [ "someval" , 0 , [ 5 , 3.14 , 8.1 , Number.NaN ] ] ,
-
-        // strings
-        [ "greetings" , "hello worlds" , [ "hi" , "yo" , "hey" , "booh !" ] ] ,
-
-        // miscs
-        [ "blastval" , null , [ 5 , "pi" , void 0 , ()=>{} ] ] ,
-    ];
-    
-    let cpt = 0;
-    const y = definitions.length;
-    const x = definitions[ 0 ][ 2 ].length;
-    const test = optionize( {} , definitions );
-
-    for ( let i = 0; i < y; ++i ) {
-        for ( let j = 0; j < x; ++j ) {
-            const bit = Math.pow( 2 , cpt++ );
-            const representation = formatedNumberRepresentation( bit , 12 );
-            const option = definitions[ i ][ 0 ];
-            expect( chosenFromMask( test.modulopt , representation , option ) ).toBe( definitions[ i ][ 2 ][ j ] );
-        }
-    }
+    expect( maskBuilder.chosenFromMask( obj.modulopt , mask , "level" ) ).toBe( "normal" );
 } );

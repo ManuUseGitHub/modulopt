@@ -1,3 +1,5 @@
+import { Modulopt } from "./Modulopt";
+
 export interface IMasks {
 	[key: string]: string;
 }
@@ -10,18 +12,35 @@ export interface IRowsOption {
   [key: string]: IColumnOption;
 }
 
-export interface IUseOption {
-  options : IOptions;
-  modulopt : IOptionsConfig
+export interface IUseOptions extends IHaveOptions{
+  modulopt : IHoldModulopt
 }
 
-export interface IOptionsConfig {
+export interface ILoggingMessage {
+  message : string;
+  timestamp : number;
+  severity? : number;
+  code? : string;
+  exception? : any;
+}
+
+export interface IHoldModulopt {
+  logs: ILoggingMessage[];
   defaults : IOptions;
-  masks : IOptions ;
+  masks : IOptions;
   free : IOptions;
+  config : IUseOptions;
   optionsOffset : number;
 }
 
+export interface IHaveOptions {
+  options : IOptions;
+}
+
+export interface IBeforeOptionizeObject { 
+  optionVector : any[] , 
+  totalOffset : number; 
+}
 export interface IColumnOption {
   mask : string; 
   default : any;

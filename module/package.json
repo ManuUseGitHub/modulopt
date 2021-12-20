@@ -1,6 +1,6 @@
 {
   "name": "modulopt",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "description": "Engrafts options support (default values + validity) to objects.",
   "main": "index.js",
   "scripts": {
@@ -26,5 +26,8 @@
   "bugs": {
     "url": "https://github.com/ManuUseGitHub/modulopt/issues"
   },
-  "homepage": "https://github.com/ManuUseGitHub/modulopt#readme"
+  "homepage": "https://github.com/ManuUseGitHub/modulopt#readme",
+  "dependencies": {
+    "date-and-time": "^2.0.1"
+  }
 }

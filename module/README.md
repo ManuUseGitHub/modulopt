@@ -1,11 +1,40 @@
 # <img id="module-logo" src="https://raw.githubusercontent.com/ManuUseGitHub/modulopt/master/logo.svg"> <br/>Modul °/o pt<br/>  [![npm version](https://badge.fury.io/js/modulopt.svg)](https://badge.fury.io/js/modulopt) [![Build Status](https://app.travis-ci.com/ManuUseGitHub/modulopt.svg?branch=master)](https://travis-ci.com/ManuUseGitHub/modulopt) [![Coverage Status](https://coveralls.io/repos/github/ManuUseGitHub/modulopt/badge.svg)](https://coveralls.io/github/ManuUseGitHub/modulopt) [![Maintainability](https://api.codeclimate.com/v1/badges/e3c7a4af56202c0f5669/maintainability)](https://codeclimate.com/github/ManuUseGitHub/modulopt/maintainability) ![Code Climate technical debt](https://img.shields.io/codeclimate/tech-debt/ManuUseGitHub/modulopt) ![NPM Downloads](https://img.shields.io/npm/dm/modulopt.svg) [![License: MIT](https://img.shields.io/badge/License-MIT-61dafb.svg)](https://github.com/ManuUseGitHub/modulopt/blob/master/LICENSE)
-Engrafts options support (default values + validity) to your objects or modules.
 
----
+## Purpose
+Any good product delivered on a large scale should provide a good quality for the service it gives or the problem it is in charge to solve. To ensure a maximum of quality level, services should also cover as many as possible usecases by providing options in the input.
+
+The downside of designing a powerfull option management is quite time consuming. Moreover, there is no clear formalism defined or convention about any option design other than : "An option has to be optional and if not specified in the input, that option has to keep the default value".
+
+The phylosophy of this module is to ease the pain of designing an option management. In response to "how can I design that?" it answers by saying: **"You don't have to, I got you covered"**.
+
+## Features
+- adds an `options` property with your ready to use options.
+- handle mismatching options (defaults etc.).
+- set options on the go easily.
+- adds a `modulopt` property with 
+  - `config` : generated using modulopt generation.
+  - `defaults` : with the default values.
+  - `logs` : for modulopt silent debugging.
+  - ...
+- reset modulopt logs
+- flexibility
+  
+## Noticeable changes
+- 2.0.0
+  - The service is Provided by Modulopt Object
+  - Modulopt config for generation : mismatch handling, option order while generated. `modulopt` special definition
+  - Logging
+  - Chimerical cases
+  - Set Options via multiple inputs (string and object)
+- 1.0.0
+  - Default management
+  - Use of `.options` to get access to options
+  - `modulopt` property on the desired object
+  - Masks usage.
+
 ## Demo
 [Runkit demo](https://runkit.com/manuusegithub/modulopt)
 
----
 ## Getting started
 
 1. **Install the package.**
@@ -15,13 +44,19 @@ Engrafts options support (default values + validity) to your objects or modules.
 2. **Require.**
    ```js
    const { optionize , stick } = require( "modulopt/dist" );
+   
+   // or
+
+   const { optionize , stick } = require( "modulopt" );
    ```
-3. **Define your options in an array of definitions :**
+3. **Break down your options in an array of definitions :**
     The definitions are smaller arrays following these simple rules :
     - **first element** is the name of the option
     - **second element** (optional) is the default value or *fallback*
     - **third element** (optional) is the alternative choices for that option
     ```js
+
+    // Example:
     const definitions = [
 
         // boolean option , <true> being the default value
@@ -40,10 +75,16 @@ Engrafts options support (default values + validity) to your objects or modules.
         [ "obj" ] ,
 
         // a half-free option accepting only numbers , <0> being the default value
-        [ "numbr" , 0 ]
+        [ "numbr" , 0 ] ,
 
         // a half-free option accepting only strings , <"hello world"> being the default value
-        [ "str" , "hello world" ]
+        [ "str" , "hello world" ] ,
+
+        // a chimerical multichoice, <null> being the default value, the values being of different types
+        [ "blastval" , null , [ 5 , "pi" , void 0 , () => { } ] ] ,
+
+        // OPTIONAL modulopt configuration : WILL NOT BE PART OF GENERATED OPTIONS
+        ["modulopt", { ... }]
     ];
     ```
     Assignable values for your options follow certain rules regarding the design of your definitions...
@@ -85,7 +126,7 @@ Engrafts options support (default values + validity) to your objects or modules.
    ```js
    const defaults = this.modulopt.defaults;
    ```
----
+
 ## Behaviors
 Modulopt controls values that you can assign to your generated options configuration. so you do not end up with wrong type value for an option or getting out of bound for propositions.
 
@@ -105,7 +146,7 @@ stick( mySoft , B ); //
 let C = mySoft.options.foo;
 ```
 
-1. **Types are the same on half-free option :  ( ✅ ) changes apply.**
+1. **Types are the same on half-free option : ✅ changes apply.**
     ```js
     A = "Hello modulopt";
     
@@ -125,7 +166,7 @@ let C = mySoft.options.foo;
 
     console.log( C ) // => 9999
     ```
-2. **Types mismatch on half-free option : ( ❎ ) default applyied.**
+2. **Types mismatch on half-free option : ❎ default applyied.**
     ```js
     A = 151;
     
@@ -135,7 +176,7 @@ let C = mySoft.options.foo;
 
     console.log( C ) // => 151
     ```
-3. **Proposition in bounds : ( ✅ ) changes apply.**
+3. **Proposition in bounds : ✅ changes apply.**
    ```js
     A = "newcomer";
 
@@ -156,7 +197,7 @@ let C = mySoft.options.foo;
     console.log( C ) // => true
     ```
 
-4. **Proposition out of bound : ( ❎ ) the option fallbacks to the default value.**
+4. **Proposition out of bound : ❎ the option fallbacks to the default value.**
    ```js
     A = "newbee";
 
@@ -166,7 +207,7 @@ let C = mySoft.options.foo;
 
     console.log( C ) // => newbee
     ```
-5. **The value set for a free option is anything but `undefined` :  ( ✅ ) changes apply.**
+5. **The value set for a free option is anything but `undefined` : ✅ changes apply.**
     To set a free option, set the default to `null` like this : 
     
     ```js
@@ -198,13 +239,40 @@ let C = mySoft.options.foo;
     
     console.log( C() ) // Vegeta said: "It's over nine thousand !!!"
     ```
-    
-6. **The value set for a free option is `undefined` : ( ❎ ! ) the option fallbacks to `null`.**
+6. **The value set for a free option is `undefined` : ❎ ! the option fallbacks to `null`.**
     >undefined will results the **`null`** value. **`null`** is evaluated **`false`** as such as **`undefined`** and both undefined and null mean pratically *nothing* even though there are little  [differences between null and undefined](https://stackoverflow.com/questions/5076944/what-is-the-difference-between-null-and-undefined-in-javascript).
 
     **Note:** 
     We do prefer null over undefined because there are no added value out of undefined testing ... in a practical cases.
----
+## Mismatches 
+Since the V2, some configuration have been added to the generation. One of them is the check on **mismatching options** when trying to invoke the stick function.
+
+Now, it is possible to have a control in case some options is not matching an exiting one from the option list. To handle the msimatching options, use the `modulopt` definition while building all your options.
+
+```js
+
+    // Example:
+    const definitions = [
+
+        ...
+
+        // OPTIONAL modulopt configuration : WILL NOT BE PART OF GENERATED OPTIONS
+        ["modulopt", { mismatch : "throw" } ]
+    ];
+```
+
+Regarding the value set for `mismatch` you can have different outcomes whenever we cannot find a matching option.
+|verb|outcome|note|
+|-|-|-|
+|`throw`|Raise an exception||
+|`yell`|Print out a message within a `console.error`||
+|`warn`|Print out a warning message within a `console.warn`||
+|`info`|Print out an info message within a `console.info`||
+|`debug`|Print out a message within a `console.log`||
+|`report`|Will write the error in the `obj.modulopt.logs` array | - Does not print out anything <br/>- `Timestamp` added  |
+|`ìgnore`|Do not do anything | No side effect|
+
+
 ## [ ADVANCED ] Modulopt generated configuration
 **Note:** 
 folowing sections are wrote to better understand the full mastery of modulopt. Knowing more is not essential to use modulopt ...
@@ -232,7 +300,7 @@ modulopt configuration for the instance of "MySoft" (class) :
 >```js
 >console.log( mySoft.modulopt );
 >```
----
+
 ### Masks
 Once you have generated modulopt configuration, you can apply desired values for your options via 2 ways.
 1. Using an object. This is the straightforward way.
@@ -248,8 +316,6 @@ first : 1 ; second : 2 ; third : 4 ; forth : 8 ;
 fifth : 16 ; sixth : 64 ; seventh : 128 ; etc. ...
 
 You can help yourself by reading this article about binary the [representation of a given number](https://www.geeksforgeeks.org/binary-representation-of-a-given-number/) 
-
----
 
 #### Conventions and restrictions 
 - Before `optionize` computes masks, all options are **sorted** in the alphabetical order so it is easier to guess the option binary assignation.
@@ -277,7 +343,6 @@ OR
 ```js
 stick( mySoft , "2.0.0.0.2..." );
 ```
----
 #### Dots and digits of a mask
 >You can notice that dots "." in masks do not have an impact. They are striped during the computation of an **effective mask***. their sole purpose is to provide a human-friendly representation.
 
@@ -296,7 +361,6 @@ To make the understanding of masks easier, let's go step by step. With next sect
 ```js
 let definitions = [];
 ```
----
 #### Boolean options cases
 Every boolean option has an `offset` of 1 in the mask mapping.
 ```js
@@ -312,7 +376,6 @@ definitions = definitions.concat( [
     [ "foo" , true ]
 ] );
 ```
----
 #### Multichoices options cases
 Every multichoice option has an offset of `choices.length` in the mask mapping without counting the default value. *There is no debate around the fact that making no choice is considered a choice here. So it does not count...* 
 ```js
@@ -352,7 +415,7 @@ stick( mySoft , mask );
 
 console.log( mySoft.options.level ); // => normal
 ```
----
+
 ### Check on masks registration
 When you call optionize, with `true` on the third argument, you can visualize masks. You can notice the default values in the `defaults` property.
 ```js
@@ -372,18 +435,51 @@ optionize( mySoft , definitions , hintConfiguration );
 This will output :
 ```js
 {
+    "config": {
+        "modulopt": {
+            "optionsOffset": 8,
+            "masks": {
+                "mismatch": {
+                    "0000.0001": "throw",
+                    "0000.0010": "yell",
+                    "0000.0100": "inform",
+                    "0000.1000": "warn",
+                    "0001.0000": "debug",
+                    "0010.0000": "report"
+                },
+                "sort": {
+                    "0100.0000": "asc", 
+                    "1000.0000": "dsc"
+                }
+            },
+            "free": {},
+            "defaults": {
+                "mismatch": "ignore", 
+                "sort": "no"
+            }
+        },
+        "options": {
+            "mismatch": "ignore", 
+            "sort": "asc"
+        }
+    },
+
     "optionsOffset": 8,
     "masks": {
         "level": {
-        "0000.1000": "normal",
-        "0001.0000": "intermediate",
-        "0010.0000": "hard"
+            "0000.1000": "normal",
+            "0001.0000": "intermediate",
+            "0010.0000": "hard"
         },
-        "sort": {"0100.0000": "asc", "1000.0000": "dsc"},
+        "sort": {
+            "0100.0000": "asc", 
+            "1000.0000": "dsc"
+        },
         "0000.0001": "bar",
         "0000.0010": "displays",
         "0000.0100": "foo"
     },
+    "logs": [],
     "free": {},
     "defaults": {
         "bar": false,
@@ -394,14 +490,11 @@ This will output :
     }
 }
 ```
----
 ## OptionsOffset
 This property is used to store the maximum offset used by masks and pad every masks with the good amount of zeros `0`. so masks can be represented properly with a dot every 4th digit.
 
----
 ## Free
 Stores every free or half-free option and the type of its default value. Therefore you can see what kind of value you are supposed to use with a specific (half-)free option.
 
----
 ## defaults
 Stores all defaults values. A copy of this property is used to initialize the options property of your `mySoft` class.

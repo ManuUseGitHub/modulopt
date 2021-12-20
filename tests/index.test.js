@@ -1,7 +1,10 @@
 /* eslint-disable no-undef */
-const { getOptionsFromMask } = require( "../module/apply" );
 const { optionize , stick } = require( "../module" );
 const { getInstanceConfigured , Testing } = require( "./utile" );
+
+const { MaskBuilder } = require( "../module/MaskBuilder" );
+
+const maskBuilder = new MaskBuilder();
 
 describe( "options" , () => {
     const vector = [
@@ -12,7 +15,8 @@ describe( "options" , () => {
         [ "es" , "nothing" , [ "rien" , "nada" , "niet" , "null" , "néan" ] ] ,
         [ "consecteture" ] ,
         [ "dolores" , 10 ] ,
-        [ "yolande" , 0 ]
+        [ "yolande" , 0 ] ,
+        [ "modulopt" , { sort : "asc" } ]
     ];
 
     test( "options are listend into the alphabetical order" , () => {
@@ -130,7 +134,7 @@ describe( "options" , () => {
 
                 masks.forEach( mask => {
 
-                    const options = getOptionsFromMask( obj.modulopt , mask );
+                    const options = maskBuilder.getOptionsFromMask( obj.modulopt , mask );
                     expect( options.sort ).toBe( direction );
                 } );
             }
