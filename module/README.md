@@ -15,7 +15,7 @@ The phylosophy of this module is to ease the pain of designing an option managem
 5. [Getting started](#getting-started)
 6. [Behaviors](#behaviors)
 7. [Mismatches](#mismatches)
-8. [[ ADVANCED ] Modulopt generated configuration](#advanced-modulopt-generated-configuration)
+8. [[ ADVANCED ] Modulopt generated configuration](#user-content--advanced--modulopt-generated-configuration)
 9. [Masks](#masks)
 10. [Check on masks registration](#check-on-masks-registration)
 11. [Modulopt property](#modulopt-property)
