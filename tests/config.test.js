@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 const { optionize , stick } = require( "../module" );
-const { sortDefiinitions } = require( "./utile" );
+const { sortDefiinitions , testModuloptInterraction , testModuloptReport , testModuloptThrow } = require( "./utile" );
 
 const { MaskBuilder } = require( "../module/MaskBuilder" );
 
@@ -123,59 +123,63 @@ test( "can throw on mismatching option thanks to config" , () => {
     expect( t ).toThrow( expect.stringMatching( /MODULOPT EXCEPTION c404\. Non existing option/ ) );
 } );
 
-test( "can queue mismatching option message thanks to config" , () => {
-
-    // TODO:  Write about the case of chimerical multioption
-    const definitions = [
-
-        // kimera case
-        [ "existing" , {} ] ,
-        [ "modulopt" , { "mismatch" : "report" } ]
-
-    ];
-
-    const obj = optionize( {} , definitions );
-    
-    stick( obj , { un : true } );
-
-    let foundMessage = "";
-
-    obj.modulopt.logs.forEach( e => {
-        if( /MODULOPT MISMATCH c404/.test( e.message ) ){
-            foundMessage = e.message;
-        }
-    } ) ;   
-    
-    expect( foundMessage ).toStrictEqual( expect.stringMatching( /MODULOPT MISMATCH c404\. Non existing option/ ) );
-} );
-
-test( "can print out to the console on mismatching option thanks to config" , () => {
-
-    const vmi = {
-        inform : { interaction : "info" , type : "INFO" } ,
-        yell : { interaction : "error" , type : "ERROR" } ,
-        warn : { interaction : "warn" , type : "WARNING" } ,
-        debug : { interaction : "log" , type : "DEBUG" } ,
-    };
-
-    Object.keys( vmi ).forEach( k => {
-
-        const e = vmi[ k ];
-        
-        // TODO:  Write about the case of chimerical multioption
+test( "Set option should be part of propositions for multichoices" , () => {
+    t = () => {
         const definitions = [
 
             // kimera case
             [ "existing" , {} ] ,
-            [ "modulopt" , { "mismatch" : k } ]
+            [ "sort" , "no" , [ "asc" , "dsc" ] ] ,
+            [ "modulopt" , { misspelled : "throw" } ]
 
         ];
 
         const test = optionize( {} , definitions );
-        console[ e.interaction  ] = jest.fn();
-        stick( test , { un : true } );
+        stick( test , { sort : "decroissant" } );
+    };
 
-        expect( console[ e.interaction  ] ).toHaveBeenCalledWith( expect.stringMatching( /MODULOPT [A-Z]+ c404\. Non existing option/ ) );
-    } );
+    expect( t ).toThrow( expect.stringMatching( /MODULOPT EXCEPTION c400\. Invalid proposition \[decroissant\] for \[sort\] option on/ ) );
+} );
 
+test( "can prevent or allow affectation thanks to configuration" , () => {
+    const regex = /MODULOPT (REPORT )?[A-Z]+ c400\. Invalid free/;
+    const moodifiedOption = { freeOpt : "hello" };
+
+    // prevent
+    let test = testModuloptInterraction( regex , moodifiedOption , "mysterious" , [ "mysteriousAffect" , false ] );
+    expect( test.options.freeOpt ).not.toBe( "hello" );
+
+    // allow
+    test = testModuloptInterraction( regex , moodifiedOption , "mysterious" , [ "mysteriousAffect" , true ] );
+    expect( test.options.freeOpt ).toBe( "hello" );
+} );
+
+test( "mysterious option can be thrown communicated or reported" , () => {
+
+    const regex = /MODULOPT (REPORT )?[A-Z]+ c400\. Invalid free/;
+    const moodifiedOption = { freeOpt : "hello" };
+
+    testModuloptThrow( regex , moodifiedOption , [ "mysterious" , "throw" ] );
+    testModuloptReport( regex , moodifiedOption , [ "mysterious" , "report" ] );
+    testModuloptInterraction( regex , moodifiedOption , "mysterious" );
+} );
+
+test( "not matching propositions for multichoices can be thrown communicated or reported" , () => {
+
+    const regex = /MODULOPT (REPORT )?[A-Z]+ c400\. Invalid proposition \[absolutely\] for \[existing\] option on/;
+    const moodifiedOption = { existing : "absolutely" };
+
+    testModuloptThrow( regex , moodifiedOption , [ "misspelled" , "throw" ] );
+    testModuloptReport( regex , moodifiedOption , [ "misspelled" , "report" ] );
+    testModuloptInterraction( regex , moodifiedOption , "misspelled" );
+} );
+
+test( "not matching option can be thrown communicated or reported" , () => {
+
+    const regex = /MODULOPT (REPORT )?[A-Z]+ c404\. Non existing option/;
+    const moodifiedOption = { unexisting : true };
+
+    testModuloptThrow( regex , moodifiedOption , [ "mismatch" , "throw" ] );
+    testModuloptReport( regex , moodifiedOption , [ "mismatch" , "report" ] );
+    testModuloptInterraction( regex , moodifiedOption , "mismatch" );
 } );

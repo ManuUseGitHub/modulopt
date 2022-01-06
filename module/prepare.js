@@ -5,6 +5,7 @@ var apply_1 = require("./apply");
 var dialog_1 = require("./dialog");
 var MaskBuilder_1 = require("./MaskBuilder");
 var Modulopt_1 = require("./Modulopt");
+var moptConstants_1 = require("./moptConstants");
 var mopt = Modulopt_1.Modulopt.getInstance();
 var mb = MaskBuilder_1.MaskBuilder.getInstance();
 var optionized = function (object, beforeOptionizeObject, hint) {
@@ -20,9 +21,15 @@ var optionized = function (object, beforeOptionizeObject, hint) {
 };
 exports.optionized = optionized;
 var fetchModuloptConfig = function () {
+    var onMissingDo = [
+        "ignore", moptConstants_1.MOPT_2_USER_ATTENTIONS,
+    ];
     return [
-        ["mismatch", "ignore", ["throw", "yell", "inform", "warn", "debug", "report"]],
-        ["sort", "no", ["asc", "dsc"]]
+        ["mismatch"].concat(onMissingDo),
+        ["misspelled"].concat(onMissingDo),
+        ["mysterious"].concat(onMissingDo),
+        ["mysteriousAffect", false],
+        moptConstants_1.MOPT_SORT
     ];
 };
 var fixModuloptConfig = function (object, optionVector) {
@@ -42,7 +49,8 @@ var addModuloptConfig = function (object) {
     // set a vector containing only modulopt config;
     var moduloptVector = fetchModuloptConfig();
     object.modulopt.config = {};
-    var configured = beforeOptionize(object.modulopt.config, moduloptVector, true);
+    var isConfig = true;
+    var configured = beforeOptionize(object.modulopt.config, moduloptVector, isConfig);
     optionized(object.modulopt.config, configured);
 };
 var beforeOptionize = function (object, optionVector, isConfig) {

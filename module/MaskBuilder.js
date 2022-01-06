@@ -55,26 +55,6 @@ var MaskBuilder = /** @class */ (function () {
         }
     };
     /**
-     * Transforms decimal number into binary representation
-     * @param dec
-     * @returns
-     */
-    MaskBuilder.prototype.dec2bin = function (dec) {
-        return (dec >>> 0).toString(2);
-    };
-    /**
-     * Pads zero (zero fill a number). It provides a string since 0 before any number is not significant
-     * @param num the number that has to gain the padding
-     * @param size the offset of the resulting string
-     * @returns
-     */
-    MaskBuilder.prototype.pad = function (num, size) {
-        num = num.toString();
-        while (num.length < size)
-            num = "0" + num;
-        return num;
-    };
-    /**
      * Every option will occupied a certain amount of space as a bit reprensentation so to be sure nothing
      * overlaps, and mostly, have consistent zero-filled (padded) masks, we have to compute the total offset
      * @param optionVector
@@ -131,6 +111,35 @@ var MaskBuilder = /** @class */ (function () {
             : row[2]
                 ? [cpt, -1 + cpt + row[2].length]
                 : [cpt];
+    };
+    MaskBuilder.prototype.getOptionsFromMask = function (modulopt, optionMask) {
+        var _this = this;
+        var options = {};
+        var masks = this.masksMappedByName(modulopt.masks);
+        Object.keys(masks).map(function (k) {
+            options[k] = _this.chosenFromMask(modulopt, optionMask, k);
+        });
+        return options;
+    };
+    /**
+     * Transforms decimal number into binary representation
+     * @param dec
+     * @returns
+     */
+    MaskBuilder.prototype.dec2bin = function (dec) {
+        return (dec >>> 0).toString(2);
+    };
+    /**
+     * Pads zero (zero fill a number). It provides a string since 0 before any number is not significant
+     * @param num the number that has to gain the padding
+     * @param size the offset of the resulting string
+     * @returns
+     */
+    MaskBuilder.prototype.pad = function (num, size) {
+        num = num.toString();
+        while (num.length < size)
+            num = "0" + num;
+        return num;
     };
     MaskBuilder.prototype.masksMappedByName = function (masks, cb, previousKey) {
         if (cb === void 0) { cb = defaultCall; }
@@ -223,15 +232,6 @@ var MaskBuilder = /** @class */ (function () {
             ? modulopt.masks[maskField]
             : maskField;
         return modulopt.defaults[option];
-    };
-    MaskBuilder.prototype.getOptionsFromMask = function (modulopt, optionMask) {
-        var _this = this;
-        var options = {};
-        var masks = this.masksMappedByName(modulopt.masks);
-        Object.keys(masks).map(function (k) {
-            options[k] = _this.chosenFromMask(modulopt, optionMask, k);
-        });
-        return options;
     };
     return MaskBuilder;
 }());

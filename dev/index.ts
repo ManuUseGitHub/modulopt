@@ -1,4 +1,4 @@
-import { IRowsOption , IUseOptions , IOptions } from "./interfaces";
+import { IUseOptions } from "./interfaces";
 import {
 	beforeOptionize ,
 	optionized

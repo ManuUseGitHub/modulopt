@@ -1,4 +1,15 @@
-import { ILoggingMessage , IOptions , IUseOptions } from "./interfaces";
+import {
+	NOT_FOUND_CODE ,
+	BAD_REQUEST ,
+	DEFAULT_MOPT_CONFIG ,
+	VMI ,
+} from "./moptConstants";
+import {
+	iFailingCheck ,
+	ILoggingMessage ,
+	IOptions ,
+	IUseOptions ,
+} from "./interfaces";
 
 const dateNTime = require( "date-and-time" );
 
@@ -20,42 +31,97 @@ const getNowString = ( date: Date , format = "hh:mm A [GMT]Z" ) => {
 	return dateNTime.format( date , format );
 };
 
-const checkValidCallOptions = ( data: IOptions , optSet: IOptions ): void => {
-	if ( data.modulopt.config ) {
-		const moduloptConfig = data.modulopt.config.options;
+const checkValidCall = ( check: iFailingCheck ): void => {
+	const { data , kind } = check;
+	const config =
+		data.modulopt.config !== undefined
+			? data.modulopt.config
+			: DEFAULT_MOPT_CONFIG;
+	const moduloptConfig = config.options;
 
-		Object.keys( optSet ).forEach( ( key ) => {
-			if ( !( key in data.options ) ) {
-				const verb = moduloptConfig.mismatch;
+	let verb = "UNKNOWN";
+	switch ( kind ) {
+		case "options" :
+			verb = moduloptConfig.mismatch;
+			break;
+		case "propositions" :
+			verb = moduloptConfig.misspelled;
+			break;
+		case "free" :
+			verb = moduloptConfig.mysterious;
+			break;
+		default :
+			throw "MODULOPT EXCEPTION c400. Unknown interraction kind. Specify either options, propositions or free";
+	}
 
-				if ( verb === "throw" ) {
-					throw `MODULOPT EXCEPTION c404. Non existing option : ${key} on ${data.constructor.name} options`;
-				} else if ( verb !== "ignore" && verb !== "report" ) {
+	const message = constructMessage( check , verb );
 
-					// verbs and interactions
-					const vmi: any = {
-						inform : { interaction : "info" , type : "INFO" } ,
-						yell : { interaction : "error" , type : "ERROR" } ,
-						warn : { interaction : "warn" , type : "WARNING" } ,
-						debug : { interaction : "log" , type : "DEBUG" } ,
-					};
+	interactOnVerb( check , verb , message );
+};
 
-					( console as any )[ vmi[ verb ].interaction ](
-						`MODULOPT ${vmi[ verb ].type} c404. Non existing option : ${key} on ${data.constructor.name} options`
-					);
-				} else if ( verb === "report" ) {
-					const time = new Date();
-					const log: ILoggingMessage = {
-						timestamp : time.getTime() ,
-						message : `[${getNowString(
-							time
-						)}] MODULOPT MISMATCH c404. Non existing option : ${key}` ,
-					};
-					data.modulopt.logs.push( log );
-				}
-			}
-		} );
+const interactOnVerb = (
+	check: iFailingCheck ,
+	verb: string ,
+	message: string
+) => {
+	if ( verb === "throw" ) {
+		throw message;
+	} else if ( verb !== "ignore" && verb !== "report" ) {
+		( console as any )[ VMI[ verb ].interaction ]( message );
+	} else if ( verb === "report" ) {
+		onShouldReport( check , message );
 	}
 };
 
-export { hintDefinitions , checkValidCallOptions };
+const constructMessage = ( check: iFailingCheck , verb: string ): string => {
+	const { data , key , kind , value } = check;
+
+	let messageParts: string[] = [ "MODULOPT UKNOWN" ];
+
+	const singularKind = kind.replace( /s$/g , "" );
+	messageParts.push(
+		kind == "options"
+			? `c${NOT_FOUND_CODE}. Non existing ${singularKind} [${key}] on`
+			: kind == "propositions"
+			? `c${BAD_REQUEST}. Invalid ${singularKind} [${value}] for [${key}] option on`
+			: `c${BAD_REQUEST}. Invalid ${singularKind} value [${value}] for the ${singularKind} [${key}] option on`
+	);
+	messageParts.push( `[${data.constructor.name}] object` );
+
+	if ( verb === "throw" ) {
+		messageParts[ 0 ] = "MODULOPT EXCEPTION";
+	} else if ( verb !== "ignore" && verb !== "report" ) {
+		messageParts[ 0 ] = `MODULOPT ${VMI[ verb ].type}`;
+	} else if ( verb === "report" ) {
+		messageParts[ 0 ] = "MODULOPT REPORT MISMATCH";
+		messageParts = [ `[${getNowString( new Date() )}]` ].concat( messageParts );
+	}
+	return messageParts.join( " " );
+};
+
+const onShouldReport = ( check: iFailingCheck , message: string ) => {
+	const time = new Date();
+
+	const log: ILoggingMessage = {
+		timestamp : time.getTime() ,
+		message : message ,
+
+		// so you can get the stacktrace
+		exception : new Error( message ) ,
+
+		// the code is get from the message. It is formated la this (with a dot at the end) : cXXX.
+		code : parseInt( /c([\d]+)\./.exec( message )![ 1 ] ) ,
+
+		// can help figuring the error out
+		changes : [
+			"These changes lead to the orror:" ,
+			check.data.options[ check.key ] ,
+			">>>>>" ,
+			check.value ,
+		] ,
+	};
+
+	check.data.modulopt.logs.push( log );
+};
+
+export { hintDefinitions , checkValidCall };

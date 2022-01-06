@@ -26,6 +26,20 @@ var Modulopt = /** @class */ (function () {
             }
         });
     };
+    Modulopt.prototype.buildDefinition = function (modulopt, totalOffset, buildDef) {
+        var _this = this;
+        buildDef.optionVector.map(function (row) {
+            if (row[2] !== undefined || typeof row[1] === "boolean") {
+                _this.treatDefinitionsWithIntervals(modulopt, row, totalOffset, buildDef);
+                // filter options without intervals or those that cannot have a binary representation
+            }
+            else if (1 <= row.length &&
+                row.length <= 2 &&
+                typeof row[1] !== "boolean") {
+                _this.treatDefinitionsWithoutInterval(row, buildDef);
+            }
+        });
+    };
     Modulopt.prototype.treatObjectWithMask = function (modulopt, definitions, key) {
         // add a mask to the IUseOption object
         var mask = definitions[key].mask;
@@ -68,20 +82,6 @@ var Modulopt = /** @class */ (function () {
         var _default = typeof row[1] !== "undefined" ? row[1] : null;
         // create a new entry on the definitions object
         definitions[option] = { "default": _default };
-    };
-    Modulopt.prototype.buildDefinition = function (modulopt, totalOffset, buildDef) {
-        var _this = this;
-        buildDef.optionVector.map(function (row) {
-            if (row[2] !== undefined || typeof row[1] === "boolean") {
-                _this.treatDefinitionsWithIntervals(modulopt, row, totalOffset, buildDef);
-                // filter options without intervals or those that cannot have a binary representation
-            }
-            else if (1 <= row.length &&
-                row.length <= 2 &&
-                typeof row[1] !== "boolean") {
-                _this.treatDefinitionsWithoutInterval(row, buildDef);
-            }
-        });
     };
     return Modulopt;
 }());

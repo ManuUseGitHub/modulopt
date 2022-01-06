@@ -36,7 +36,7 @@ export class MaskBuilder {
 	 * @param cpt counter
 	 * @param totalOffset totalizer of the offset
 	 */
-	assignValuePerBit(
+	public assignValuePerBit(
 		modulopt: IHoldModulopt ,
 		row: any ,
 		cpt: number ,
@@ -75,27 +75,6 @@ export class MaskBuilder {
 				modulopt.masks[ option ][ representation ] = row[ 2 ][ i ];
 			}
 		}
-	}
-
-	/**
-	 * Transforms decimal number into binary representation
-	 * @param dec
-	 * @returns
-	 */
-	public dec2bin( dec: number ) {
-		return ( dec >>> 0 ).toString( 2 );
-	}
-
-	/**
-	 * Pads zero (zero fill a number). It provides a string since 0 before any number is not significant
-	 * @param num the number that has to gain the padding
-	 * @param size the offset of the resulting string
-	 * @returns
-	 */
-	public pad( num: string , size: number ): string {
-		num = num.toString();
-		while ( num.length < size ) num = "0" + num;
-		return num;
 	}
 
 	/**
@@ -167,7 +146,7 @@ export class MaskBuilder {
 		return "-1";
 	}
 
-	defineInterval( row: any , cpt: number ): number[] {
+	public defineInterval( row: any , cpt: number ): number[] {
 		return typeof row[ 1 ] === "boolean" && row.length === 2
 			? [ cpt ]
 			: row[ 2 ]
@@ -175,7 +154,39 @@ export class MaskBuilder {
 			: [ cpt ];
 	}
 
-	masksMappedByName( masks: IOptions , cb = defaultCall , previousKey = "" ) {
+	public getOptionsFromMask( modulopt: IHoldModulopt , optionMask: string ): any {
+		const options: any = {};
+		const masks = this.masksMappedByName( modulopt.masks );
+
+		Object.keys( masks ).map( ( k ) => {
+			options[ k ] = this.chosenFromMask( modulopt , optionMask , k );
+		} );
+
+		return options;
+	}
+
+	/**
+	 * Transforms decimal number into binary representation
+	 * @param dec
+	 * @returns
+	 */
+	private dec2bin( dec: number ) {
+		return ( dec >>> 0 ).toString( 2 );
+	}
+
+	/**
+	 * Pads zero (zero fill a number). It provides a string since 0 before any number is not significant
+	 * @param num the number that has to gain the padding
+	 * @param size the offset of the resulting string
+	 * @returns
+	 */
+	private pad( num: string , size: number ): string {
+		num = num.toString();
+		while ( num.length < size ) num = "0" + num;
+		return num;
+	}
+
+	private masksMappedByName( masks: IOptions , cb = defaultCall , previousKey = "" ) {
 		const mapped: IOptions = {};
 
 		for ( const [ key , value ] of Object.entries( masks ) ) {
@@ -191,7 +202,8 @@ export class MaskBuilder {
 		}
 		return mapped;
 	}
-	applyMasks( masks: IOptions , a: string , maskField: string ) {
+
+	private applyMasks( masks: IOptions , a: string , maskField: string ) {
 		let result = 0;
 		const onAssociation = (
 			key: string ,
@@ -223,7 +235,7 @@ export class MaskBuilder {
 	 * "2" => "true":1 ... "1" => "false":0 ... "0" => default : "-"
 	 * @param setMask
 	 */
-	guessMaskFromMask( setMask: string ): string {
+	private guessMaskFromMask( setMask: string ): string {
 		const result = [];
 		let i = 0;
 		setMask = stripDots( setMask );
@@ -235,13 +247,13 @@ export class MaskBuilder {
 		return result.join( "" );
 	}
 
-	defineSortOption( modulopt: IHoldModulopt , bit: number , maskField: string ) {
+	private defineSortOption( modulopt: IHoldModulopt , bit: number , maskField: string ) {
 		const offset = modulopt.optionsOffset;
 		const representation = this.formatedNumberRepresentation( bit , offset );
 		return modulopt.masks[ maskField ][ representation ];
 	}
 
-	defineBooleansOption( defaults: IOptions , bit: string , option: string ) {
+	private defineBooleansOption( defaults: IOptions , bit: string , option: string ) {
 		switch ( bit ) {
 			case "1" :
 				return true;
@@ -252,7 +264,7 @@ export class MaskBuilder {
 		}
 	}
 
-	chosenFromMask( modulopt: IHoldModulopt , setMask: string , maskField: string ) {
+	private chosenFromMask( modulopt: IHoldModulopt , setMask: string , maskField: string ) {
 		const a = substituteTwos( stripDots( setMask ) );
 		const c = this.guessMaskFromMask( setMask );
 
@@ -285,16 +297,5 @@ export class MaskBuilder {
 			: maskField;
 
 		return modulopt.defaults[ option ];
-	}
-
-	getOptionsFromMask( modulopt: IHoldModulopt , optionMask: string ): any {
-		const options: any = {};
-		const masks = this.masksMappedByName( modulopt.masks );
-
-		Object.keys( masks ).map( ( k ) => {
-			options[ k ] = this.chosenFromMask( modulopt , optionMask , k );
-		} );
-
-		return options;
 	}
 }

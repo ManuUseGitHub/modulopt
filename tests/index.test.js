@@ -115,7 +115,7 @@ describe( "options" , () => {
         ].forEach( arg => {
             const updated = stick( instance , { obj : arg } );
 
-            expect( updated.options.obj ).toBe( arg != void 0 ? arg : null );
+            expect( updated.options.obj ).toBe( arg !== void 0 ? arg : null );
         } );
 
     } );

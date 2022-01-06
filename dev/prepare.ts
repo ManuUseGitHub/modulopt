@@ -4,11 +4,12 @@ import {
 	IUseOptions ,
 	IBuild ,
 	IRowsOption ,
-	IBeforeOptionizeObject , 
+	IBeforeOptionizeObject ,
 	IHoldModulopt ,
 } from "./interfaces";
 import { MaskBuilder } from "./MaskBuilder";
 import { Modulopt } from "./Modulopt";
+import { MOPT_2_USER_ATTENTIONS , MOPT_SORT } from "./moptConstants";
 
 const mopt = Modulopt.getInstance() as Modulopt;
 const mb = MaskBuilder.getInstance() as MaskBuilder;
@@ -36,9 +37,16 @@ const optionized = <T extends IUseOptions>(
 };
 
 const fetchModuloptConfig = () => {
+	const onMissingDo: ( string | string[] )[] = [
+		"ignore" , MOPT_2_USER_ATTENTIONS ,
+	];
+
 	return [
-		[ "mismatch" , "ignore" , [ "throw" , "yell" , "inform" , "warn" , "debug" , "report" ] ] ,
-		[ "sort" , "no" , [ "asc" , "dsc" ] ] 
+		( [ "mismatch" ] as any[] ).concat( onMissingDo ) ,
+		( [ "misspelled" ] as any[] ).concat( onMissingDo ) ,
+		( [ "mysterious" ] as any[] ).concat( onMissingDo ) ,
+		[ "mysteriousAffect" , false ] ,
+		MOPT_SORT
 	];
 };
 
@@ -65,10 +73,12 @@ const addModuloptConfig = ( object: IUseOptions ) => {
 
 	object.modulopt.config = {} as IUseOptions;
 
+	const isConfig = true;
+
 	const configured = beforeOptionize(
 		object.modulopt.config ,
 		moduloptVector ,
-		true
+		isConfig
 	);
 
 	optionized( object.modulopt.config , configured );
@@ -83,6 +93,7 @@ const beforeOptionize = (
 	if ( !isConfig ) {
 		addModuloptConfig( object );
 		object.modulopt.logs = [];
+
 		fixModuloptConfig( object.modulopt.config , optionVector );
 	}
 	const sortedVector = sortEntries( object.modulopt.config , optionVector );
@@ -116,10 +127,10 @@ const sortEntries = ( config: IUseOptions , optionVector: any[] ) => {
 		return result;
 	};
 
-	if( config && config.options.sort !== "no" ){
-		if( config.options.sort === "asc" ) {
+	if ( config && config.options.sort !== "no" ) {
+		if ( config.options.sort === "asc" ) {
 			return optionVector.sort( sortFunction );
-		} else if( config.options.sort === "dsc" ) {
+		} else if ( config.options.sort === "dsc" ) {
 			return optionVector.sort( sortFunction ).reverse();
 		}
 	}

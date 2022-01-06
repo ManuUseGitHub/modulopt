@@ -34,7 +34,27 @@ export class Modulopt {
         } );
     }
 
-    public treatObjectWithMask(
+    public buildDefinition(
+        modulopt : IHoldModulopt ,
+        totalOffset: number ,
+        buildDef: IBuild
+    ){
+        buildDef.optionVector.map( ( row ) => {
+            if ( row[ 2 ] !== undefined || typeof row[ 1 ] === "boolean" ) {
+                this.treatDefinitionsWithIntervals( modulopt , row , totalOffset , buildDef );
+    
+                // filter options without intervals or those that cannot have a binary representation
+            } else if (
+                1 <= row.length &&
+                row.length <= 2 &&
+                typeof row[ 1 ] !== "boolean"
+            ) {
+                this.treatDefinitionsWithoutInterval( row , buildDef );
+            }
+        } );
+    }
+
+    private treatObjectWithMask(
         modulopt : IHoldModulopt ,
         definitions: IRowsOption ,
         key: string
@@ -48,7 +68,7 @@ export class Modulopt {
         modulopt.defaults[ key ] = ( definitions as any )[ key ].default;
     }
     
-    public treatObjectWithoutMask(
+    private treatObjectWithoutMask(
         modulopt : IHoldModulopt ,
         definitions: IRowsOption ,
         key: string
@@ -58,7 +78,7 @@ export class Modulopt {
         modulopt.free[ key ] = { type : typeof definitions[ key ].default };
     }
 
-    public treatDefinitionsWithIntervals(
+    private treatDefinitionsWithIntervals(
         modulopt : IHoldModulopt ,
         row: any[] ,
         totalOffset: number ,
@@ -93,7 +113,7 @@ export class Modulopt {
      * @param row
      * @param buildDef parameter object that holds definitions and optionVector
      */
-    treatDefinitionsWithoutInterval( row: any[] , buildDef: IBuild ){
+    private treatDefinitionsWithoutInterval( row: any[] , buildDef: IBuild ){
         const { definitions } = buildDef;
     
         // store the name of the option
@@ -104,25 +124,5 @@ export class Modulopt {
     
         // create a new entry on the definitions object
         definitions[ option ] = { default : _default } as IColumnOption;
-    }
-
-    public buildDefinition(
-        modulopt : IHoldModulopt ,
-        totalOffset: number ,
-        buildDef: IBuild
-    ){
-        buildDef.optionVector.map( ( row ) => {
-            if ( row[ 2 ] !== undefined || typeof row[ 1 ] === "boolean" ) {
-                this.treatDefinitionsWithIntervals( modulopt , row , totalOffset , buildDef );
-    
-                // filter options without intervals or those that cannot have a binary representation
-            } else if (
-                1 <= row.length &&
-                row.length <= 2 &&
-                typeof row[ 1 ] !== "boolean"
-            ) {
-                this.treatDefinitionsWithoutInterval( row , buildDef );
-            }
-        } );
     }
 }
