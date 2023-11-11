@@ -1,6 +1,6 @@
 {
   "name": "modulopt",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "Engrafts options support (default values + validity) to objects.",
   "repository": {
     "type": "git",
@@ -22,7 +22,7 @@
   "bugs": {
     "url": "https://github.com/ManuUseGitHub/modulopt/issues"
   },
-  "main":"dist/index.js",
+  "main": "dist/index.js",
   "homepage": "https://modulopt-doc.herokuapp.com/",
   "scripts": {
     "testCov": "jest --coverage && coveralls < coverage/lcov.info",
