@@ -5,7 +5,7 @@ import {
 	VMI ,
 } from "./moptConstants";
 import {
-	iFailingCheck ,
+	IFailingCheck ,
 	ILoggingMessage ,
 	IOptions ,
 	IUseOptions ,
@@ -31,7 +31,7 @@ const getNowString = ( date: Date , format = "hh:mm A [GMT]Z" ) => {
 	return dateNTime.format( date , format );
 };
 
-const checkValidCall = ( check: iFailingCheck ): void => {
+const checkValidCall = ( check: IFailingCheck ): void => {
 	const { data , kind } = check;
 	const config =
 		data.modulopt.config !== undefined
@@ -60,7 +60,7 @@ const checkValidCall = ( check: iFailingCheck ): void => {
 };
 
 const interactOnVerb = (
-	check: iFailingCheck ,
+	check: IFailingCheck ,
 	verb: string ,
 	message: string
 ) => {
@@ -73,7 +73,7 @@ const interactOnVerb = (
 	}
 };
 
-const constructMessage = ( check: iFailingCheck , verb: string ): string => {
+const constructMessage = ( check: IFailingCheck , verb: string ): string => {
 	const { data , key , kind , value } = check;
 
 	let messageParts: string[] = [ "MODULOPT UKNOWN" ];
@@ -99,7 +99,7 @@ const constructMessage = ( check: iFailingCheck , verb: string ): string => {
 	return messageParts.join( " " );
 };
 
-const onShouldReport = ( check: iFailingCheck , message: string ) => {
+const onShouldReport = ( check: IFailingCheck , message: string ) => {
 	const time = new Date();
 
 	const log: ILoggingMessage = {

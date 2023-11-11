@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-const { stick } = require( "../module" );
+const { stick } = require( "../dist" );
 const { getInstanceConfigured } = require( "./utile" );
 
 test( "can set an option with object" , () => {

@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 const { getInstanceConfigured , removeFromOptions } = require( "./utile" );
 
-const { MaskBuilder } = require( "../module/MaskBuilder" );
+const { MaskBuilder } = require( "../dist/MaskBuilder" );
 const maskBuilder = new MaskBuilder();
 
 test( "the bar option is set to false from mask" , () => {

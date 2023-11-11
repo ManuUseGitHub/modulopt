@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 // eslint-disable-next-line no-undef
-const { optionize , stick } = require( "../module" );
+const { optionize , stick } = require( "../dist" );
 
 class Testing {
     hello = "world";

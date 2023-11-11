@@ -1,8 +1,8 @@
 /* eslint-disable no-undef */
-const { optionize , stick } = require( "../module" );
+const { optionize , stick } = require( "../dist" );
 const { getInstanceConfigured , Testing } = require( "./utile" );
 
-const { MaskBuilder } = require( "../module/MaskBuilder" );
+const { MaskBuilder } = require( "../dist/MaskBuilder" );
 
 const maskBuilder = new MaskBuilder();
 

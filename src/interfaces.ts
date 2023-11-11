@@ -23,7 +23,7 @@ export interface ILoggingMessage {
 	changes?:any[]
 }
 
-export interface FailingCheck {
+export interface IFailingCheck {
   data: IOptions;
 	key: string;
   value : any;
