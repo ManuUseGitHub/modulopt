@@ -1,4 +1,6 @@
-export var __esModule: boolean;
-export function optionize(_: any, M: any, y: any): any;
-export function stick(_: any, ...args: any[]): any;
-export function reset(_: any): void;
+declare module "index.bundle" {
+    export var __esModule: boolean;
+    export function optionize(object: any, optionVector: any, hint: any): any;
+    export function stick(object: any, ...args: any[]): any;
+    export function reset(object: any): void;
+}

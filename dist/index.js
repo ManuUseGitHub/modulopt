@@ -9,4 +9,4 @@ date-and-time/date-and-time.js:
    * @preserve date-and-time (c) KNOWLEDGECODE | MIT
    *)
 */
-//# sourceMappingURL=index.min.js.map
+//# sourceMappingURL=index.js.map

@@ -8,7 +8,7 @@ import { stickOptions } from "./apply";
 const optionize = <T extends IUseOptions>(
 	object: T ,
 	optionVector: any[] ,
-	hint = false
+	hint:boolean|undefined = false
 ): T => {
 	const result = optionized(
 		object ,
